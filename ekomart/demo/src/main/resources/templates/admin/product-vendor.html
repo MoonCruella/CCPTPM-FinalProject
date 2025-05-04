@@ -1,0 +1,88 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/home.html}">
+<div class="body-root-inner" layout:fragment="content">
+	<div class="transection">
+		<div class="vendor-list-main-wrapper product-wrapper">
+			<div class="card-body table-product-select">
+				<div class="table-responsive">
+					<table class="table table-hover display" id="example"
+						cellspacing="0" width="100%">
+						<thead class="mb--20">
+							<tr>
+								<th>STT</th>
+								<th>Product Image</th>
+								<th>Product Name</th>
+								<th>Category Name</th>
+								<th>Shop Name</th>
+								<th>Display</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="product,iterStat : ${listProduct}">
+								<td width="10%">
+									<div class="name">
+										<p th:text="${iterStat.index+1}"></p> 
+									</div>
+								</td>
+								<td width="30%">
+									<div class="item-image-and-name">
+										<img th:src="${'/admin/vendor/product/images/' + product.image}" alt="">
+									</div>
+								</td>
+								<td>
+									<div class="name" style="color:black;font-weight:bold">
+										<p th:text="${product.name}"></p>
+									</div>
+								</td>
+								<td>
+									<div class="name">
+										<p th:text="${product.category.categoryName}"></p>
+									</div>
+								</td>
+								<td>
+									<div class="name">
+										<p th:text="${product.shop.name}"></p>
+									</div>
+								</td>
+								<td>
+									<div class ="name">
+										<p th:if="${product.status} == 1"  style="color:green">Accepted</p>
+										<button th:if="${product.status} == 0" type="button" class="btn btn-primary" style="background-color:green!important; " data-bs-toggle="modal" data-bs-target="#productModal" th:onclick="|getProductById('${product.id}')|">Waiting</button>
+										<p th:if="${product.status} == -1" style="color:red">Denied</p>
+									</div>
+								</td>
+								<td class="text-end">
+									<div class="between-stock-table action">																			
+										<!-- Scrollable modal -->
+										<button type="button" class="btn btn-success" >
+											<a th:href="@{/admin/vendor/product/detail/{id}(id= ${product.id})}" style="text-decoration: none;">View</a>
+										</button>
+									</div>
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+					<!-- table-responsive.// -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- bottom footer areas start -->
+	<div class="footer-copyright">
+		<div class="left">
+			<p>Copyright © 2024 All Right Reserved.</p>
+		</div>
+		<ul>
+			<li><a href="#">Terms</a></li>
+			<li><a href="#">Privacy</a></li>
+			<li><a href="#">Help</a></li>
+		</ul>
+	</div>
+	<!-- bottom footer areas end -->
+</div>
+<!-- rts header area start -->
+</html>
+<!-- /main-content-wrap -->
