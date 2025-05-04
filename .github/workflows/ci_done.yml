@@ -12,9 +12,9 @@ jobs:
       - name: Extract Jira Issue Key
         id: extract
         run: |
-          key=$(echo "${{ github.event.pull_request.title }}" | grep -o '[A-Za-z0-9]\{2,\}-[0-9]\+' | head -n1 | xargs)
+          key=$(echo "${{ github.event.pull_request.title }}" | grep -o '[A-Za-z0-9]\{2,\}-[0-9]\+' | head -n1 | xargs || true)
           echo "jira_key=$key" >> $GITHUB_OUTPUT
-            
+
       - name: Login to Jira
         uses: atlassian/gajira-login@v3
         env:
@@ -23,7 +23,12 @@ jobs:
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
 
       - name: Transition Jira issue to Done
+        if: steps.extract.outputs.jira_key != ''
         uses: atlassian/gajira-transition@v3
         with:
           issue: ${{ steps.extract.outputs.jira_key }}
           transition: "Đã hoàn thành nhiệm vụ"
+
+      - name: Skip Jira transition if no key found
+        if: steps.extract.outputs.jira_key == ''
+        run: echo "No Jira issue key found in PR title. Skipping Jira transition."
